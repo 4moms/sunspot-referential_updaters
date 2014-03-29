@@ -1,5 +1,5 @@
 module Sunspot
-  module ReferencialUpdaters
+  module ReferentialUpdaters
     VERSION = "0.0.1"
   end
 end
