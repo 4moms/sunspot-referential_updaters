@@ -1,4 +1,4 @@
-require "sunspot-referencial_updaters/version"
+require "sunspot-referential_updaters/version"
 
 module Sunspot
   module ReferencialUpdaters

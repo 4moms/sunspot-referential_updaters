@@ -1,5 +1,5 @@
 require 'pry'
-require './../lib/sunspot-referential_updaters'
+require 'sunspot-referential_updaters'
 require 'rspec'
 
 RSpec.configure do |c|
