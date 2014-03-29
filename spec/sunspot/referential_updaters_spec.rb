@@ -28,21 +28,53 @@ describe Sunspot::ReferentialUpdaters do
 				relation2 = :author
 				Library.stubs(:reindexable_relations).returns([relation1, relation2])
 
-				library.expects(:book).returns(mock(:solr_index))
-				library.expects(:author).returns(mock(:solr_index))
+				mock_relation1 = mock()
+				mock_relation1.expects(:solr_index).returns(true)
+				mock_relation1.expects(:responds_to?).with(:solr_index).returns(true)
+
+				mock_relation2 = mock()
+				mock_relation2.expects(:solr_index).returns(true)
+				mock_relation2.expects(:responds_to?).with(:solr_index).returns(true)
+
+
+				library.expects(:book).returns(mock_relation1)
+				library.expects(:author).returns(mock_relation2)
 
 				library.send :reindex_relations!
 			end
+
+			it 'should not raise an error if the relation doesnt respond to #solr_index' do
+				obj = mock()
+				obj.expects(:responds_to?).with(:solr_index).returns(false)
+
+				Library.stubs(:reindexable_relations).returns([:things])
+				library = Library.new
+
+				library.expects(:things).returns(obj)
+				lambda { library.send(:reindex_relations!).should be_true }.should_not raise_exception
+			end
+
 		end
 
 		context 'with plural relations' do
 			it 'should call #solr_index on each of the relations' do
 				library = Library.new
 
-				relation1 = mock(:solr_index)
-				relation2 = mock(:solr_index) 
-				relationA = mock(:solr_index)
-				relationB = mock(:solr_index)
+				relation1 = mock()
+				relation1.expects(:solr_index).returns(true)
+				relation1.expects(:responds_to?).with(:solr_index).returns(true)
+
+				relation2 = mock()
+				relation2.expects(:solr_index).returns(true)
+				relation2.expects(:responds_to?).with(:solr_index).returns(true)
+
+				relationA = mock()
+				relationA.expects(:solr_index).returns(true)
+				relationA.expects(:responds_to?).with(:solr_index).returns(true)
+
+				relationB = mock()
+				relationB.expects(:solr_index).returns(true)
+				relationB.expects(:responds_to?).with(:solr_index).returns(true)
 
 				Library.stubs(:reindexable_relations).returns([:books, :authors])
 
@@ -50,6 +82,17 @@ describe Sunspot::ReferentialUpdaters do
 				library.expects(:authors).returns([relationA, relationB])
 
 				library.send :reindex_relations!
+			end
+
+			it 'should not raise an error if a relation doesnt respond to solr_index' do
+				obj = mock()
+				obj.expects(:responds_to?).with(:solr_index).returns(false)
+
+				Library.stubs(:reindexable_relations).returns([:things])
+				library = Library.new
+
+				library.expects(:things).returns([obj])
+				lambda { library.send(:reindex_relations!).should be_true }.should_not raise_exception
 			end
 		end
 	end

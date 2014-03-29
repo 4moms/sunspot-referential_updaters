@@ -8,11 +8,14 @@ module Sunspot
 			self.class.reindexable_relations.each do |relationship|
 				relation = self.send(relationship)
 
-				if relation.respond_to? :each
-					relation.map(&:solr_index)
-				else
-					relation.solr_index
+				unless relation.respond_to? :each
+					relation = [ relation ]
 				end
+
+				relation.each do |a_relation|
+					a_relation.solr_index if a_relation.responds_to? :solr_index
+				end
+
 			end
 		end
 
