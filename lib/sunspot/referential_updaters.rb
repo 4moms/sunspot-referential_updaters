@@ -5,8 +5,14 @@ module Sunspot
 		end
 
 		def reindex_relations!
-			self.class.reindexable_relations.each do |relation|
-				self.send(relation).solr_index
+			self.class.reindexable_relations.each do |relationship|
+				relation = self.send(relationship)
+
+				if relation.respond_to? :each
+					relation.map(&:solr_index)
+				else
+					relation.solr_index
+				end
 			end
 		end
 
