@@ -7,7 +7,7 @@ module Sunspot
 		def reindex_relations!
 
 			self.class.reindexable_relations.each do |relationship|
-				relation = self.send(relationship)
+				relation = self.send(relationship) rescue nil
 
 				unless relation.respond_to? :each
 					relation = [ relation ]
@@ -17,6 +17,7 @@ module Sunspot
 					a_relation.solr_index if a_relation.respond_to? :solr_index
 				end
 
+				true
 			end
 		end
 

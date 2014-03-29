@@ -20,6 +20,16 @@ describe Sunspot::ReferentialUpdaters do
 
 	describe '#reindex_relations!' do
 
+		context "when the relationship raises an error" do
+
+			it 'should return true' do
+				library = Library.new
+				Library.stubs(:reindexable_relations).returns([:books])
+
+				library.reindex_relations!.should be_true
+			end
+		end
+
 		context "with singular relation" do
 			it 'should call #solr_index on all relations' do
 				library = Library.new
