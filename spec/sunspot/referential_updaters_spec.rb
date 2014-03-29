@@ -30,11 +30,13 @@ describe Sunspot::ReferentialUpdaters do
 
 				mock_relation1 = mock()
 				mock_relation1.expects(:solr_index).returns(true)
-				mock_relation1.expects(:responds_to?).with(:solr_index).returns(true)
+				mock_relation1.expects(:respond_to?).with(:each).returns(false)
+				mock_relation1.expects(:respond_to?).with(:solr_index).returns(true)
 
 				mock_relation2 = mock()
 				mock_relation2.expects(:solr_index).returns(true)
-				mock_relation2.expects(:responds_to?).with(:solr_index).returns(true)
+				mock_relation2.expects(:respond_to?).with(:each).returns(false)
+				mock_relation2.expects(:respond_to?).with(:solr_index).returns(true)
 
 
 				library.expects(:book).returns(mock_relation1)
@@ -45,7 +47,8 @@ describe Sunspot::ReferentialUpdaters do
 
 			it 'should not raise an error if the relation doesnt respond to #solr_index' do
 				obj = mock()
-				obj.expects(:responds_to?).with(:solr_index).returns(false)
+				obj.expects(:respond_to?).with(:each).returns(false)
+				obj.expects(:respond_to?).with(:solr_index).returns(false)
 
 				Library.stubs(:reindexable_relations).returns([:things])
 				library = Library.new
@@ -62,19 +65,19 @@ describe Sunspot::ReferentialUpdaters do
 
 				relation1 = mock()
 				relation1.expects(:solr_index).returns(true)
-				relation1.expects(:responds_to?).with(:solr_index).returns(true)
+				relation1.expects(:respond_to?).with(:solr_index).returns(true)
 
 				relation2 = mock()
 				relation2.expects(:solr_index).returns(true)
-				relation2.expects(:responds_to?).with(:solr_index).returns(true)
+				relation2.expects(:respond_to?).with(:solr_index).returns(true)
 
 				relationA = mock()
 				relationA.expects(:solr_index).returns(true)
-				relationA.expects(:responds_to?).with(:solr_index).returns(true)
+				relationA.expects(:respond_to?).with(:solr_index).returns(true)
 
 				relationB = mock()
 				relationB.expects(:solr_index).returns(true)
-				relationB.expects(:responds_to?).with(:solr_index).returns(true)
+				relationB.expects(:respond_to?).with(:solr_index).returns(true)
 
 				Library.stubs(:reindexable_relations).returns([:books, :authors])
 
@@ -86,7 +89,7 @@ describe Sunspot::ReferentialUpdaters do
 
 			it 'should not raise an error if a relation doesnt respond to solr_index' do
 				obj = mock()
-				obj.expects(:responds_to?).with(:solr_index).returns(false)
+				obj.expects(:respond_to?).with(:solr_index).returns(false)
 
 				Library.stubs(:reindexable_relations).returns([:things])
 				library = Library.new
