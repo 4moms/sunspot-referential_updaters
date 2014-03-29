@@ -6,7 +6,7 @@ module Sunspot
 
 		def reindex_relations!
 			self.class.reindexable_relations.each do |relation|
-				relation.solr_index
+				self.send(relation).solr_index
 			end
 		end
 

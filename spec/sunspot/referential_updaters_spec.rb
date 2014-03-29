@@ -21,9 +21,14 @@ describe Sunspot::ReferentialUpdaters do
 	describe '#reindex_relations!' do
 		it 'should call #solr_index on all relations' do
 			library = Library.new
-			relation1 = mock(:solr_index)
-			relation2 = mock(:solr_index)
+
+			relation1 = :book
+			relation2 = :author
 			Library.stubs(:reindexable_relations).returns([relation1, relation2])
+
+			library.expects(:book).returns(mock(:solr_index))
+			library.expects(:author).returns(mock(:solr_index))
+
 			library.send :reindex_relations!
 		end
 	end
